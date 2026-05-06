@@ -25,19 +25,19 @@
         th { background-color: #f8fafc; font-weight: 600; }
         .sensor-name { font-weight: 600; text-align: left; }
         .value { font-weight: 700; font-family: monospace; font-size: 0.85rem; }
-        .control-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; margin: 12px 0; }
-        .control-row label { width: 75px; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; }
+        .control-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; margin: 12px 0; }
+        .control-row label { width: 65px; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; }
         input[type="range"] { flex: 2; min-width: 100px; height: 4px; margin: 0; }
         input[type="range"]:disabled { opacity: 0.5; }
         input[type="number"] { width: 100px; padding: 4px 6px; border-radius: 20px; border: 1px solid #cbd5e1; font-size: 0.75rem; text-align: center; }
         .slider-value { min-width: 32px; text-align: center; font-weight: 600; font-size: 0.75rem; flex-shrink: 0; }
-        .feedback-value { min-width: 55px; text-align: center; background: #eef2ff; border-radius: 20px; padding: 2px 6px; font-size: 0.7rem; font-weight: 600; margin-left: 2px; flex-shrink: 0;}
+        .feedback-value { min-width: 55px; text-align: center; background: #eef2ff; border-radius: 20px; padding: 2px 6px; font-size: 0.7rem; font-weight: 600; margin-left: 0px; flex-shrink: 0;}
         .feedback-label { font-size: 0.7rem; margin-left: 2px; flex-shrink: 0; }
-        .inline-buttons { display: flex; gap: 6px; flex-wrap: nowrap; flex: 2; }
+        .inline-buttons { display: flex; gap: 4px; flex-wrap: nowrap; flex: 2; }
         .inline-buttons button { flex: 1; text-align: center; padding: 5px 8px; font-size: 0.7rem; }
         .log-box { background: #0f172a; color: #a5f3fc; font-family: monospace; font-size: 0.6rem; padding: 8px; border-radius: 16px; max-height: 120px; overflow-y: auto; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .lum-line { background: #f8fafc; border-radius: 20px; padding: 8px 12px; margin-top: 8px; text-align: left; font-weight: 600; font-size: 0.9rem; }
+        .lum-line { background: #f8fafc; border-radius: 20px; padding: 8px 12px; margin-top: 8px; text-align: left; font-weight: 500; font-size: 0.75rem; }
         .sensor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 12px; background: #f8fafc; border-radius: 16px; padding: 10px; }
         .sensor-grid div { font-size: 0.75rem; }
         input[type="range"] {
@@ -61,7 +61,10 @@
     <div class="card">
         <h2>📊 Capteurs</h2>
         <table id="sensorTable"><thead><tr><th>Capteur</th><th>🌡️ Temp.</th><th>💧 Humid.</th></tr></thead><tbody id="sensorBody"></tbody></table>
-        <div class="lum-line">💡 Luminosité : <span id="lumValue">--</span> lumen</div>
+        <div class="lum-line" style="display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; justify-content: space-between;">
+            <span style="flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">💡 Luminosité : <span id="lumValue">--</span> lumen</span>
+            <span style="flex: 0 0 auto; white-space: nowrap;">⚙️ Mode J/N : <span id="modeJnFeedback" class="feedback-value">--</span></span>
+        </div>
         <div class="sensor-grid">
             <div>🔋 Vbat : <span id="vbatValue">--</span> V</div>
             <div>🔌 Ibat : <span id="ibatValue">--</span> A</div>
@@ -80,35 +83,30 @@
             <button id="modeManualBtn" class="mode-btn" disabled>Manuel</button>
         </div><span id="modeStatus" class="feedback-value">Mode: --</span></div>
 
-        <!-- Seuils et Mode J/N -->
-<div style="margin: 12px 0;">
-    <!-- Ligne des libellés -->
-    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; padding: 0 8px;">
-        <span style="flex: 1; text-align: center; font-weight: 600; font-size: 0.75rem;">☀️ Seuil jour </span>
-        <span style="flex: 1; text-align: center; font-weight: 600; font-size: 0.75rem;">🌙 Seuil nuit</span>
-        <span style="flex: 1; text-align: center; font-weight: 600; font-size: 0.75rem;">⚙️ Mode J/N</span>
-    </div>
-    <!-- Ligne des valeurs et retours -->
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <!-- Seuil jour -->
-        <div style="flex: 1; display: flex; align-items: center; gap: 4px;">
-            <input type="number" id="luxDayInput" step="50" style="width: 80px;" disabled>
-            <span class="feedback-label">↺</span>
-            <span id="luxDayFeedback" class="feedback-value">--</span><span>lx</span>
+        <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 70px; display: flex; flex-direction: column; gap: 1px;">
+                <div class="control-row" style="align-items: center; gap: 6px;">
+                    <label style="white-space: nowrap; width: auto; min-width: 0;">☀️ Seuil jour</label>
+                    <input type="number" id="luxDayInput" step="50" style="width: auto; flex: 1; min-width: 0;" disabled>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 4px; width: 100%;">
+                    <span class="feedback-label">↺</span>
+                    <span id="luxDayFeedback" class="feedback-value">--</span>
+                    <span>lx</span>
+                </div>
+            </div>
+            <div style="flex: 1; min-width: 70px; display: flex; flex-direction: column; gap: 1px;">
+                <div class="control-row" style="align-items: center; gap: 6px;">
+                    <label style="white-space: nowrap; width: auto; min-width: 0;">🌙 Seuil nuit</label>
+                    <input type="number" id="luxNightInput" step="50" style="width: auto; flex: 1; min-width: 0;" disabled>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 4px; width: 100%;">
+                    <span class="feedback-label">↺</span>
+                    <span id="luxNightFeedback" class="feedback-value">--</span>
+                    <span>lx</span>
+                </div>
+            </div>
         </div>
-        <!-- Seuil nuit -->
-        <div style="flex: 1; display: flex; align-items: center; gap: 4px;">
-            <input type="number" id="luxNightInput" step="50" style="width: 80px;" disabled>
-            <span class="feedback-label">↺</span>
-            <span id="luxNightFeedback" class="feedback-value">--</span><span>lx</span>
-        </div>
-        <!-- Mode J/N : retour uniquement -->
-        <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <span class="feedback-label">↺</span>
-            <span id="modeJnFeedback" class="feedback-value">--</span>
-        </div>
-    </div>
-</div>
 
         <div class="control-row"><label>🚪 Trappes</label><div class="inline-buttons">
             <button id="trappesOpenBtn" class="trappes-btn" disabled>Ouvrir</button>
@@ -124,11 +122,6 @@
         <div class="control-row"><label>🌀 Ventil.</label><input type="range" id="fanSlider" min="0" max="100" step="1" disabled><span id="fanSliderValue" class="slider-value">0</span><span class="feedback-label">↺</span><span id="fanFeedback" class="feedback-value">--</span><span>%</span></div>
         <div class="control-row"><label>📦 Store</label><input type="range" id="storeSlider" min="0" max="100" step="1" disabled><span id="storeSliderValue" class="slider-value">0</span><span class="feedback-label">↺</span><span id="storeFeedback" class="feedback-value">--</span><span>%</span></div>
         <div class="control-row"><label>🎯 Consigne</label><input type="range" id="consigneSlider" min="0" max="60" step="0.1" disabled><span id="consigneSliderValue" class="slider-value">22.5</span><span class="feedback-label">↺</span><span id="consigneFeedback" class="feedback-value">--</span><span>°C</span></div>
-        <div class="control-row">
-            <label>🔋 Vbat</label>
-            <button id="readVbatBtn">Lire Vbat</button>
-            <span id="vbatManual" style="margin-left: 10px;">-- V</span>
-        </div>
     </div>
 
     <div class="card"><div class="flex-between"><h2>📜 Événements</h2><button id="clearLogBtn" style="background:#94a3b8;">Effacer</button></div><div id="log" class="log-box"></div></div>
@@ -209,48 +202,81 @@
     // Bouton de lecture Vbat (manuel)
     const readVbatBtn = document.getElementById('readVbatBtn');
     const vbatManualSpan = document.getElementById('vbatManual');
-    if (readVbatBtn) {
-        readVbatBtn.onclick = async () => {
-            if (!vbatChar) {
-                addLog("❌ Caractéristique Vbat non disponible", true);
-                return;
-            }
-            try {
-                const value = await vbatChar.readValue();
-                const raw = new TextDecoder().decode(value);
-                addLog(`🔍 Vbat (lecture directe) : ${raw}`);
-                const match = raw.match(/\d+(?:\.\d+)?/);
-                if (match) {
-                    const num = parseFloat(match[0]);
-                    vbatManualSpan.innerText = num.toFixed(2) + " V";
-                    vbatValueSpan.innerText = num.toFixed(2);
-                    addLog(`🔋 Vbat : ${num.toFixed(2)} V`);
-                } else {
-                    addLog(`⚠️ Vbat non reconnu : ${raw}`, true);
-                }
-            } catch (err) {
-                addLog(`❌ Erreur lecture Vbat : ${err.message}`, true);
-            }
-        };
-    }
+    
 
     let consigneInteracting = false, fanInteracting = false, storeInteracting = false, res200wInteracting = false;
     let storeLastInteraction = 0;
     const STORE_DEBOUNCE_MS = 3000;
+    let currentModeValue = null;
+    let currentIsNight = false;
+    let trappesPendingTimer = null;
+    let trappesPending = false;
 
     function setControlsEnabled(enable) {
         fanSlider.disabled = !enable;
         storeSlider.disabled = !enable;
-        trappesOpenBtn.disabled = !enable;
-        trappesCloseBtn.disabled = !enable;
         res50wOnBtn.disabled = !enable;
         res50wOffBtn.disabled = !enable;
         res200wSlider.disabled = !enable;
+        if (!trappesPending) {
+            trappesOpenBtn.disabled = !enable;
+            trappesCloseBtn.disabled = !enable;
+        }
+    }
+
+    function clearTrappesPendingTimer() {
+        if (trappesPendingTimer) {
+            clearTimeout(trappesPendingTimer);
+            trappesPendingTimer = null;
+        }
+    }
+
+    function setTrappesPending(action) {
+        clearTrappesPendingTimer();
+        trappesPending = true;
+        trappesOpenBtn.disabled = true;
+        trappesCloseBtn.disabled = true;
+        trappesStatusSpan.innerText = `État: ${action}...`;
+        trappesOpenBtn.style.background = "#64748b";
+        trappesCloseBtn.style.background = "#64748b";
+    }
+
+    async function readTrappesState() {
+        if (!trappesStateChar) return;
+        try {
+            const value = await trappesStateChar.readValue();
+            handleTrappesStateNotification({ target: { value } });
+            addLog('🔄 Relecture trappes après attente');
+        } catch (err) {
+            addLog(`⚠️ Lecture trappes après attente échouée : ${err.message}`, true);
+        }
+    }
+
+    async function handleTrappesAction(cmd) {
+        const action = cmd === "TRAPPES_OPEN" ? "Ouverture" : "Fermeture";
+        if (await sendCommand(cmd)) {
+            setTrappesPending(action);
+            trappesPendingTimer = setTimeout(() => {
+                readTrappesState();
+            }, 22000);
+        }
+    }
+
+    function updateConsigneSliderAvailability() {
+        const disableConsigne = (currentModeValue === "AUTO" && currentIsNight);
+        consigneSlider.disabled = disableConsigne;
+        if (disableConsigne) {
+            consigneSlider.style.opacity = '0.5';
+        } else {
+            consigneSlider.style.opacity = '';
+        }
     }
 
     function onModeChanged(modeValue) {
         const isAuto = (modeValue === "AUTO");
+        currentModeValue = modeValue;
         setControlsEnabled(!isAuto);
+        updateConsigneSliderAvailability();
         modeAutoBtn.disabled = false;
         modeManualBtn.disabled = false;
         modeAutoBtn.style.background = isAuto ? "#10b981" : "#64748b";
@@ -357,6 +383,8 @@
     }
 
     function handleTrappesStateNotification(e) {
+        clearTrappesPendingTimer();
+        trappesPending = false;
         const raw = new TextDecoder().decode(e.target.value);
         const match = raw.match(/[01]/);
         if (!match) {
@@ -368,6 +396,13 @@
         trappesStatusSpan.innerText = `État: ${isOpen ? "Ouvert" : "Fermé"}`;
         trappesOpenBtn.style.background = isOpen ? "#10b981" : "#64748b";
         trappesCloseBtn.style.background = !isOpen ? "#10b981" : "#64748b";
+        if (currentModeValue === "AUTO") {
+            trappesOpenBtn.disabled = true;
+            trappesCloseBtn.disabled = true;
+        } else {
+            trappesOpenBtn.disabled = false;
+            trappesCloseBtn.disabled = false;
+        }
         addLog(`🚪 Trappes état : ${isOpen ? "Ouvert" : "Fermé"} (${val})`);
     }
 
@@ -394,8 +429,10 @@
         const match = raw.match(/[01]/);
         if (match) {
             const val = match[0];
-            const text = (val === "1") ? "Nuit" : "Jour";
+            currentIsNight = (val === "1");
+            const text = currentIsNight ? "Nuit" : "Jour";
             document.getElementById('modeJnFeedback').innerText = text;
+            updateConsigneSliderAvailability();
             addLog(`⚙️ Mode J/N : ${text} (${val})`);
         } else {
             addLog(`⚠️ Mode J/N non reconnu : ${raw}`, true);
@@ -406,109 +443,152 @@
     async function readElectricsAndThresholds() {
     if (!device || !device.gatt.connected) return;
 
+    const promises = [];
+
     // Vbat
     if (vbatChar) {
-        try {
-            const val = await vbatChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+(?:\.\d+)?/);
-            if (match) {
-                const num = parseFloat(match[0]);
-                vbatValueSpan.innerText = num.toFixed(2);
-                addLog(`🔋 Vbat (polling) : ${num.toFixed(2)} V`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await vbatChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+(?:\.\d+)?/);
+                if (match) {
+                    const num = parseFloat(match[0]);
+                    vbatValueSpan.innerText = num.toFixed(2);
+                    addLog(`🔋 Vbat (polling) : ${num.toFixed(2)} V`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // Ibat
     if (ibatChar) {
-        try {
-            const val = await ibatChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+(?:\.\d+)?/);
-            if (match) {
-                const num = parseFloat(match[0]);
-                ibatValueSpan.innerText = num.toFixed(2);
-                addLog(`🔌 Ibat (polling) : ${num.toFixed(2)} A`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await ibatChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+(?:\.\d+)?/);
+                if (match) {
+                    const num = parseFloat(match[0]);
+                    ibatValueSpan.innerText = num.toFixed(2);
+                    addLog(`🔌 Ibat (polling) : ${num.toFixed(2)} A`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // Vppv (tension panneau)
     if (vppvChar) {
-        try {
-            const val = await vppvChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+(?:\.\d+)?/);
-            if (match) {
-                const num = parseFloat(match[0]);
-                vppvValueSpan.innerText = num.toFixed(1);
-                addLog(`☀️ Vppv (polling) : ${num.toFixed(1)} V`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await vppvChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+(?:\.\d+)?/);
+                if (match) {
+                    const num = parseFloat(match[0]);
+                    vppvValueSpan.innerText = num.toFixed(1);
+                    addLog(`☀️ Vppv (polling) : ${num.toFixed(1)} V`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // Pppv (puissance panneau)
     if (pppvChar) {
-        try {
-            const val = await pppvChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+/);
-            if (match) {
-                const num = parseInt(match[0], 10);
-                pppvValueSpan.innerText = num;
-                addLog(`⚡ Pppv (polling) : ${num} W`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await pppvChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+/);
+                if (match) {
+                    const num = parseInt(match[0], 10);
+                    pppvValueSpan.innerText = num;
+                    addLog(`⚡ Pppv (polling) : ${num} W`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // État batterie
     if (batStatusChar) {
-        try {
-            const val = await batStatusChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const cs = parseInt(raw, 10);
-            let text = "Inconnu";
-            switch(cs) {
-                case 0: text = "Hors tension"; break;
-                case 2: text = "Défaut"; break;
-                case 3: text = "Charge rapide"; break;
-                case 4: text = "Charge lente"; break;
-                case 5: text = "Maintien"; break;
-            }
-            batStatusValueSpan.innerText = text;
-            addLog(`📊 État batterie (polling) : ${text}`);
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await batStatusChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const cs = parseInt(raw, 10);
+                let text = "Inconnu";
+                switch(cs) {
+                    case 0: text = "Hors tension"; break;
+                    case 2: text = "Défaut"; break;
+                    case 3: text = "Charge rapide"; break;
+                    case 4: text = "Charge lente"; break;
+                    case 5: text = "Maintien"; break;
+                }
+                batStatusValueSpan.innerText = text;
+                addLog(`📊 État batterie (polling) : ${text}`);
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // Seuil jour
     if (luxDayChar) {
-        try {
-            const val = await luxDayChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+/);
-            if (match) {
-                const num = match[0];
-                luxDayFeedbackSpan.innerText = num;
-                addLog(`☀️ Seuil jour (polling) : ${num} lx`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await luxDayChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+/);
+                if (match) {
+                    const num = match[0];
+                    luxDayFeedbackSpan.innerText = num;
+                    addLog(`☀️ Seuil jour (polling) : ${num} lx`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
 
     // Seuil nuit
     if (luxNightChar) {
-        try {
-            const val = await luxNightChar.readValue();
-            const raw = new TextDecoder().decode(val);
-            const match = raw.match(/\d+/);
-            if (match) {
-                const num = match[0];
-                luxNightFeedbackSpan.innerText = num;
-                addLog(`🌙 Seuil nuit (polling) : ${num} lx`);
-            }
-        } catch(e) { /* ignorer */ }
+        promises.push((async () => {
+            try {
+                const val = await luxNightChar.readValue();
+                const raw = new TextDecoder().decode(val);
+                const match = raw.match(/\d+/);
+                if (match) {
+                    const num = match[0];
+                    luxNightFeedbackSpan.innerText = num;
+                    addLog(`🌙 Seuil nuit (polling) : ${num} lx`);
+                }
+            } catch(e) { /* ignorer */ }
+        })());
     }
+
+    await Promise.all(promises);
 }
+
+    async function pollAllFeedbacks() {
+        if (!device || !device.gatt?.connected) return;
+
+        const readAndHandle = async (char, handler) => {
+            if (!char) return;
+            try {
+                const value = await char.readValue();
+                handler({ target: { value } });
+            } catch (err) {
+                // lecture non supportée ou échec, on ignore
+            }
+        };
+
+        await Promise.all([
+            readAndHandle(trappesStateChar, handleTrappesStateNotification),
+            readAndHandle(modeChar, handleModeNotification),
+            readAndHandle(modeJnChar, handleModeJnNotification),
+            readAndHandle(fanFeedbackChar, handleFanFeedback),
+            readAndHandle(storeChar, handleStoreFeedback),
+            readAndHandle(res50wStateChar, handleRes50wStateNotification),
+            readAndHandle(res200wChar, handleRes200wFeedback),
+            readAndHandle(lumChar, handleLumNotification)
+        ]);
+    }
 
     let slowPollInterval = null;
 
@@ -520,8 +600,11 @@
         try {
             await commandChar.writeValue(new TextEncoder().encode(cmd));
             addLog(`📤 Commande : ${cmd}`);
-            // Après la commande, forcer une lecture des valeurs électriques et seuils (avec un léger délai)
-            setTimeout(() => readElectricsAndThresholds(), 200);
+            // Après la commande, forcer un polling général des feedbacks
+            setTimeout(() => {
+                readElectricsAndThresholds();
+                pollAllFeedbacks();
+            }, 200);
             return true;
         } catch (err) {
             addLog(`❌ Erreur envoi "${cmd}" : ${err.message}`, true);
@@ -629,8 +712,8 @@
     offBtn.onclick = () => sendCommand("OFF");
     modeAutoBtn.onclick = () => sendCommand("MODE_AUTO");
     modeManualBtn.onclick = () => sendCommand("MODE_MANUAL");
-    trappesOpenBtn.onclick = () => sendCommand("TRAPPES_OPEN");
-    trappesCloseBtn.onclick = () => sendCommand("TRAPPES_CLOSE");
+    trappesOpenBtn.onclick = () => handleTrappesAction("TRAPPES_OPEN");
+    trappesCloseBtn.onclick = () => handleTrappesAction("TRAPPES_CLOSE");
     res50wOnBtn.onclick = () => sendCommand("RES50W_ON");
     res50wOffBtn.onclick = () => sendCommand("RES50W_OFF");
     clearLogBtn.onclick = clearLog;
